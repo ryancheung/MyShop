@@ -1,27 +1,21 @@
-using eShop.Catalog.Data;
+using eShop.Catalog.API;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+builder.AddDefaultOpenApi();
+builder.AddApplicationServices();
 
-builder.AddNpgsqlDbContext<CatalogDbContext>("CatalogDB");
-
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
+app.UseDefaultOpenApi();
+
 app.MapDefaultEndpoints();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.MapCatalogApi();
+app.MapGroup(app.GetOptions<CatalogOptions>().ApiBasePath)
+    .WithTags("Catalog API")
+    .MapCatalogApi();
 
 app.Run();

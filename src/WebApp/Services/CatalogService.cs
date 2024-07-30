@@ -28,6 +28,12 @@ public class CatalogService(HttpClient httpClient)
         return result ?? new(0, 0, 0, []);
     }
 
+    public Task<CatalogItem?> GetCatalogItem(int itemId)
+    {
+        var uri = $"{remoteServiceBaseUrl}items/{itemId}"; 
+        return httpClient.GetFromJsonAsync<CatalogItem>(uri);
+    }
+
     private static string GetAllCatalogItemsUri(string baseUri, int pageIndex, int pageSize, int? brand, int? type)
     {
         // Build URLs like:

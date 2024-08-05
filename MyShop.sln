@@ -17,10 +17,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eShop.ServiceDefaults", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "src\WebApp\WebApp.csproj", "{B590063F-5783-4568-96F2-70141B450AEE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.API", "src\Identity.API\Identity.API.csproj", "{73202025-4E0D-47A0-8E25-8FDB7E9AD2C7}"
+EndProject
 Global
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
@@ -102,6 +101,21 @@ Global
 		{B590063F-5783-4568-96F2-70141B450AEE}.Release|x64.Build.0 = Release|Any CPU
 		{B590063F-5783-4568-96F2-70141B450AEE}.Release|x86.ActiveCfg = Release|Any CPU
 		{B590063F-5783-4568-96F2-70141B450AEE}.Release|x86.Build.0 = Release|Any CPU
+		{73202025-4E0D-47A0-8E25-8FDB7E9AD2C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73202025-4E0D-47A0-8E25-8FDB7E9AD2C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73202025-4E0D-47A0-8E25-8FDB7E9AD2C7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{73202025-4E0D-47A0-8E25-8FDB7E9AD2C7}.Debug|x64.Build.0 = Debug|Any CPU
+		{73202025-4E0D-47A0-8E25-8FDB7E9AD2C7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{73202025-4E0D-47A0-8E25-8FDB7E9AD2C7}.Debug|x86.Build.0 = Debug|Any CPU
+		{73202025-4E0D-47A0-8E25-8FDB7E9AD2C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73202025-4E0D-47A0-8E25-8FDB7E9AD2C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73202025-4E0D-47A0-8E25-8FDB7E9AD2C7}.Release|x64.ActiveCfg = Release|Any CPU
+		{73202025-4E0D-47A0-8E25-8FDB7E9AD2C7}.Release|x64.Build.0 = Release|Any CPU
+		{73202025-4E0D-47A0-8E25-8FDB7E9AD2C7}.Release|x86.ActiveCfg = Release|Any CPU
+		{73202025-4E0D-47A0-8E25-8FDB7E9AD2C7}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A834D8FD-C2F0-470D-B74B-F01F637EBBC3} = {B6753CBB-2061-4E2A-9912-3628F4B9861B}
@@ -110,5 +124,6 @@ Global
 		{2FF7315D-8EE2-4749-A685-13D63417CBC9} = {B6753CBB-2061-4E2A-9912-3628F4B9861B}
 		{15FBE72D-6F13-4EBA-A335-C7779E75B360} = {B6753CBB-2061-4E2A-9912-3628F4B9861B}
 		{B590063F-5783-4568-96F2-70141B450AEE} = {B6753CBB-2061-4E2A-9912-3628F4B9861B}
+		{73202025-4E0D-47A0-8E25-8FDB7E9AD2C7} = {B6753CBB-2061-4E2A-9912-3628F4B9861B}
 	EndGlobalSection
 EndGlobal

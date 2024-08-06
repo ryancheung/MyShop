@@ -63,5 +63,20 @@ public static class Config
                 AccessTokenLifetime = 60*60*2, // 2 hours
                 IdentityTokenLifetime= 60*60*2 // 2 hours
             },
+            new Client
+            {
+                ClientId = "basketswaggerui",
+                ClientName = "Basket Swagger UI",
+                AllowedGrantTypes = GrantTypes.Implicit,
+                AllowAccessTokensViaBrowser = true,
+
+                RedirectUris = { $"{configuration["BasketApiClient"]}/swagger/oauth2-redirect.html" },
+                PostLogoutRedirectUris = { $"{configuration["BasketApiClient"]}/swagger/" },
+
+                AllowedScopes =
+                {
+                    "basket"
+                }
+            },
         };
 }

@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" Version="8.0.2" />
     <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="8.1.0" />
+    <PackageReference Include="Aspire.Hosting.Redis" Version="8.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +20,7 @@
     <ProjectReference Include="..\Catalog.API\Catalog.API.csproj" />
     <ProjectReference Include="..\Catalog.Data.Manager\Catalog.Data.Manager.csproj" />
     <ProjectReference Include="..\WebApp\WebApp.csproj" />
+    <ProjectReference Include="..\Basket.API\Basket.API.csproj" />
   </ItemGroup>
 
 </Project>

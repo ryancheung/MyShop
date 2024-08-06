@@ -15,7 +15,7 @@
 
             var subjectId = subject.Claims.Where(x => x.Type == "sub").FirstOrDefault()?.Value;
 
-            var user = await _userManager.FindByIdAsync(subjectId);
+            var user = await _userManager.FindByIdAsync(subjectId!);
             if (user == null)
                 throw new ArgumentException("Invalid subject identifier");
 
@@ -28,7 +28,7 @@
             var subject = context.Subject ?? throw new ArgumentNullException(nameof(context.Subject));
 
             var subjectId = subject.Claims.Where(x => x.Type == "sub").FirstOrDefault()?.Value;
-            var user = await _userManager.FindByIdAsync(subjectId);
+            var user = await _userManager.FindByIdAsync(subjectId!);
 
             context.IsActive = false;
 
@@ -57,8 +57,8 @@
             var claims = new List<Claim>
             {
                 new Claim(JwtClaimTypes.Subject, user.Id),
-                new Claim(JwtClaimTypes.PreferredUserName, user.UserName),
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
+                new Claim(JwtClaimTypes.PreferredUserName, user.UserName!),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName!)
             };
 
             if (!string.IsNullOrWhiteSpace(user.Name))
@@ -98,7 +98,7 @@
             {
                 claims.AddRange(new[]
                 {
-                    new Claim(JwtClaimTypes.Email, user.Email),
+                    new Claim(JwtClaimTypes.Email, user.Email!),
                     new Claim(JwtClaimTypes.EmailVerified, user.EmailConfirmed ? "true" : "false", ClaimValueTypes.Boolean)
                 });
             }

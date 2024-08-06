@@ -50,6 +50,7 @@ public static class HostingExtensions
             options.Scope.Add("offline_access");
             options.Scope.Add("basket");
             options.Scope.Add("orders");
+            options.TokenValidationParameters.NameClaimType = "name";
         });
 
         // Blazor auth services

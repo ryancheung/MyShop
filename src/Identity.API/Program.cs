@@ -1,5 +1,6 @@
 ﻿using eShop.Identity.API;
 using eShop.Identity.API.Data;
+using eShop.Identity.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,8 @@ builder.Services.AddIdentityServer(options =>
 .AddAspNetIdentity<ApplicationUser>()
 // TODO: Not recommended for production - you need to store your key material somewhere secure
 .AddDeveloperSigningCredential();
+
+builder.Services.AddTransient<IProfileService, ProfileService>();
 
 var app = builder.Build();
 

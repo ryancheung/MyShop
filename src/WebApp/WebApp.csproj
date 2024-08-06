@@ -9,7 +9,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\eShop.ServiceDefaults\eShop.ServiceDefaults.csproj" />
+
     <PackageReference Include="Microsoft.Extensions.ServiceDiscovery.Yarp" Version="8.1.0" />
+    <PackageReference Include="Duende.AccessTokenManagement.OpenIdConnect" Version="2.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.7" />
   </ItemGroup>
 
   <ItemGroup>

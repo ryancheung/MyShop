@@ -13,8 +13,14 @@ var identityEndpoint = identityApi.GetEndpoint("https");
 
 builder.AddProject<Projects.Catalog_Data_Manager>("catalog-db-mgr").WithReference(catalogDb);
 var catalogApi = builder.AddProject<Projects.Catalog_API>("catalog-api").WithReference(catalogDb);
-builder.AddProject<Projects.WebApp>("webapp")
+
+var webApp = builder.AddProject<Projects.WebApp>("webapp")
     .WithReference(catalogApi)
-    .WithEnvironment("IdentityUrl", identityEndpoint);;
+    .WithEnvironment("IdentityUrl", identityEndpoint);
+
+// Wire up the callback urls (self referencing)
+webApp.WithEnvironment("CallBackUrl", webApp.GetEndpoint("https"));
+
+identityApi.WithEnvironment("WebAppClient", webApp.GetEndpoint("https"));
 
 builder.Build().Run();

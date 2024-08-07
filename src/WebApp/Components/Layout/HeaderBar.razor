@@ -15,6 +15,7 @@
             </a>
             
             <UserMenu />
+            <CartMenu />
         </nav>
         <div class="eshop-header-intro">
             <h1><SectionOutlet SectionName="page-header-title" /></h1>
@@ -29,5 +30,5 @@
 
     // We can use Endpoint Metadata to determine the page currently being visited
     private Type? PageComponentType => HttpContext.GetEndpoint()?.Metadata.OfType<ComponentTypeMetadata>().FirstOrDefault()?.Type;
-    private bool IsCatalog => PageComponentType == typeof(Pages.Catalog);
+    private bool IsCatalog => PageComponentType == typeof(Pages.Catalog.Catalog);
 }

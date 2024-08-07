@@ -28,6 +28,14 @@ public class CatalogService(HttpClient httpClient)
         return result ?? new(0, 0, 0, []);
     }
 
+    public async Task<List<CatalogItem>> GetCatalogItems(IEnumerable<int> ids)
+    {
+        var uri = $"{remoteServiceBaseUrl}items/by?ids={string.Join("&ids=", ids)}";
+        var result = await httpClient.GetFromJsonAsync<List<CatalogItem>>(uri);
+
+        return result ?? [];
+    }
+
     public Task<CatalogItem?> GetCatalogItem(int itemId)
     {
         var uri = $"{remoteServiceBaseUrl}items/{itemId}"; 

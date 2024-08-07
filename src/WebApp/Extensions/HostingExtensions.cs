@@ -1,4 +1,5 @@
-﻿using eShop.WebApp.Services;
+﻿using eShop.Basket.API.Grpc;
+using eShop.WebApp.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -15,6 +16,8 @@ public static class HostingExtensions
 
         // Application services
         services.AddSingleton<IProductImageUrlProvider, ProductImageUrlProvider>();
+        services.AddSingleton<BasketService>();
+        services.AddScoped<BasketState>();
         services.AddScoped<LogOutService>();
 
         services.AddHttpForwarderWithServiceDiscovery();
@@ -58,6 +61,8 @@ public static class HostingExtensions
         services.AddCascadingAuthenticationState();
 
         // HTTP and gRPC client registrations
+        services.AddGrpcClient<Basket.BasketClient>(o => o.Address = new Uri("http://basket-api"))
+            .AddAuthToken();
         services.AddHttpClient<CatalogService>(o => o.BaseAddress = new Uri("http://catalog-api"));
 
         services.AddOpenIdConnectAccessTokenManagement();

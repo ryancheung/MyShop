@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore.Server.ClientFactory" Version="2.65.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.65.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <ProjectReference Include="..\eShop.ServiceDefaults\eShop.ServiceDefaults.csproj" />
 
     <PackageReference Include="Microsoft.Extensions.ServiceDiscovery.Yarp" Version="8.1.0" />
@@ -16,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="..\Basket.API\Proto\basket.proto" GrpcServices="Client" />
+    <Protobuf Include="..\Basket.API\Protos\basket.proto" GrpcServices="Client" />
   </ItemGroup>
 
 </Project>

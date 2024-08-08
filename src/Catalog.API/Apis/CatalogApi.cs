@@ -11,20 +11,21 @@ public static class CatalogApi
 {
     private static readonly FileExtensionContentTypeProvider _fileContentTypeProvider = new();
 
-    public static IEndpointRouteBuilder MapCatalogApi(this IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder MapCatalogApiV1(this IEndpointRouteBuilder app)
     {
+        var api = app.MapGroup("api/catalog").HasApiVersion(1.0);
         // Routes for querying catalog items.
-        app.MapGet("/items", GetAllItems);
-        app.MapGet("/items/by", GetItemsByIds);
-        app.MapGet("/items/{id:int}", GetItemById);
-        app.MapGet("/items/by/{name:minlength(1)}", GetItemsByName);
-        app.MapGet("/items/{catalogItemId:int}/pic", GetItemPictureById);
+        api.MapGet("/items", GetAllItems);
+        api.MapGet("/items/by", GetItemsByIds);
+        api.MapGet("/items/{id:int}", GetItemById);
+        api.MapGet("/items/by/{name:minlength(1)}", GetItemsByName);
+        api.MapGet("/items/{catalogItemId:int}/pic", GetItemPictureById);
 
         // Routes for resolving catalog items by type and brand.
-        app.MapGet("/items/type/{typeId}/brand/{brandId?}", GetItemsByBrandAndTypeId);
-        app.MapGet("/items/type/all/brand/{brandId:int?}", GetItemsByBrandId);
-        app.MapGet("/catalogtypes", async (CatalogDbContext context) => await context.CatalogTypes.OrderBy(x => x.Type).AsNoTracking().ToListAsync());
-        app.MapGet("/catalogbrands", async (CatalogDbContext context) => await context.CatalogBrands.OrderBy(x => x.Brand).AsNoTracking().ToListAsync());
+        api.MapGet("/items/type/{typeId}/brand/{brandId?}", GetItemsByBrandAndTypeId);
+        api.MapGet("/items/type/all/brand/{brandId:int?}", GetItemsByBrandId);
+        api.MapGet("/catalogtypes", async (CatalogDbContext context) => await context.CatalogTypes.OrderBy(x => x.Type).AsNoTracking().ToListAsync());
+        api.MapGet("/catalogbrands", async (CatalogDbContext context) => await context.CatalogBrands.OrderBy(x => x.Brand).AsNoTracking().ToListAsync());
 
         return app;
     }
@@ -46,8 +47,6 @@ public static class CatalogApi
             .AsNoTracking()
             .ToListAsync();
 
-        ChangeUriPlaceholder(services.Options.Value, itemsOnPage);
-
         return TypedResults.Ok(new PaginatedItems<CatalogItem>(pageIndex, pageSize, totalItems, itemsOnPage));
     }
 
@@ -59,8 +58,6 @@ public static class CatalogApi
             .Where(item => ids.Contains(item.Id))
             .AsNoTracking()
             .ToListAsync();
-
-        ChangeUriPlaceholder(services.Options.Value, items);
 
         return TypedResults.Ok(items);
     }
@@ -84,8 +81,6 @@ public static class CatalogApi
             return TypedResults.NotFound();
         }
 
-        item.PictureUri = services.Options.Value.GetPictureUrl(item.Id);
-
         return TypedResults.Ok(item);
     }
 
@@ -107,8 +102,6 @@ public static class CatalogApi
             .Take(pageSize)
             .AsNoTracking()
             .ToListAsync();
-
-        ChangeUriPlaceholder(services.Options.Value, itemsOnPage);
 
         return TypedResults.Ok(new PaginatedItems<CatalogItem>(pageIndex, pageSize, totalItems, itemsOnPage));
     }
@@ -159,8 +152,6 @@ public static class CatalogApi
             .AsNoTracking()
             .ToListAsync();
 
-        ChangeUriPlaceholder(services.Options.Value, itemsOnPage);
-
         return TypedResults.Ok(new PaginatedItems<CatalogItem>(pageIndex, pageSize, totalItems, itemsOnPage));
     }
 
@@ -188,17 +179,7 @@ public static class CatalogApi
             .AsNoTracking()
             .ToListAsync();
 
-        ChangeUriPlaceholder(services.Options.Value, itemsOnPage);
-
         return TypedResults.Ok(new PaginatedItems<CatalogItem>(pageIndex, pageSize, totalItems, itemsOnPage));
-    }
-
-    private static void ChangeUriPlaceholder(CatalogOptions options, List<CatalogItem> items)
-    {
-        foreach (var item in items)
-        {
-            item.PictureUri = options.GetPictureUrl(item.Id);
-        }
     }
 
     public static string GetFullPath(string contentRootPath, string pictureFileName) =>

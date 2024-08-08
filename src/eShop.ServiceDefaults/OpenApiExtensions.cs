@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.ServiceDiscovery;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Microsoft.Extensions.Hosting;
+namespace eShop.ServiceDefaults;
 
 public static class OpenApiExtensions
 {
@@ -34,12 +37,22 @@ public static class OpenApiExtensions
             ///   }
             /// }
 
-            var pathBase = configuration["PATH_BASE"];
+            var pathBase = configuration["PATH_BASE"] ?? string.Empty;
+            var authSection = openApiSection.GetSection("Auth");
             var endpointSection = openApiSection.GetRequiredSection("Endpoint");
 
-            var swaggerUrl = endpointSection["Url"] ?? $"{(!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty)}/swagger/v1/swagger.json";
+            foreach (var desc in app.DescribeApiVersions())
+            {
+                var name = desc.GroupName;
+                var url = endpointSection["Url"] ?? $"{pathBase}/swagger/{name}/swagger.json";
+                setup.SwaggerEndpoint(url, name);
+            }
 
-            setup.SwaggerEndpoint(swaggerUrl, endpointSection.GetRequiredValue("Name"));
+            if (authSection.Exists())
+            {
+                setup.OAuthClientId(authSection.GetRequiredValue("ClientId"));
+                setup.OAuthAppName(authSection.GetRequiredValue("AppName"));
+            }
         });
 
         // Add a redirect from the root of the app to the swagger endpoint
@@ -48,7 +61,8 @@ public static class OpenApiExtensions
         return app;
     }
 
-    public static IHostApplicationBuilder AddDefaultOpenApi(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder AddDefaultOpenApi(this IHostApplicationBuilder builder,
+        IApiVersioningBuilder? apiVersioning = default)
     {
         var services = builder.Services;
         var configuration = builder.Configuration;
@@ -62,31 +76,12 @@ public static class OpenApiExtensions
 
         services.AddEndpointsApiExplorer();
 
-        services.AddSwaggerGen();
-
-        services.AddOptions<SwaggerGenOptions>()
-            .Configure(options =>
-            {
-                /// {
-                ///   "OpenApi": {
-                ///     "Document": {
-                ///         "Title": ..
-                ///         "Version": ..
-                ///         "Description": ..
-                ///     }
-                ///   }
-                /// }
-                var document = openApi.GetRequiredSection("Document");
-
-                var version = document.GetRequiredValue("Version") ?? "v1";
-
-                options.SwaggerDoc(version, new()
-                {
-                    Title = document.GetRequiredValue("Title"),
-                    Version = version,
-                    Description = document.GetRequiredValue("Description")
-                });
-            });
+        if (apiVersioning is not null)
+        {
+            apiVersioning.AddApiExplorer(options => options.GroupNameFormat = "'v'VVV");
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+            services.AddSwaggerGen(options => options.OperationFilter<OpenApiDefaultValues>());
+        }
 
         return builder;
     }

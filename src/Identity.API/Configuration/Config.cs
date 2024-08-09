@@ -62,6 +62,21 @@ public static class Config
                 },
                 AccessTokenLifetime = 60*60*2, // 2 hours
                 IdentityTokenLifetime= 60*60*2 // 2 hours
-            }
+            },
+            new Client
+            {
+                ClientId = "orderingswaggerui",
+                ClientName = "Ordering Swagger UI",
+                AllowedGrantTypes = GrantTypes.Implicit,
+                AllowAccessTokensViaBrowser = true,
+
+                RedirectUris = { $"{configuration["OrderingApiClient"]}/swagger/oauth2-redirect.html", $"{configuration["OrderingApiClientHttps"]}/swagger/oauth2-redirect.html" },
+                PostLogoutRedirectUris = { $"{configuration["OrderingApiClient"]}/swagger/", $"{configuration["OrderingApiClientHttps"]}/swagger/" },
+
+                AllowedScopes =
+                {
+                    "orders"
+                }
+            },
         };
 }

@@ -23,6 +23,10 @@ var basketApi = builder.AddProject<Projects.Basket_API>("basket-api")
     .WithReference(basketStore)
     .WithEnvironment("Identity__Url", identityEndpoint);
 
+var orderingApi = builder.AddProject<Projects.Ordering_API>("ordering-api")
+    .WithReference(orderDb)
+    .WithEnvironment("Identity__Url", identityEndpoint);
+
 var webApp = builder.AddProject<Projects.WebApp>("webapp")
     .WithReference(catalogApi)
     .WithReference(basketApi)
@@ -33,6 +37,8 @@ webApp.WithEnvironment("CallBackUrl", webApp.GetEndpoint("https"));
 
 // Identity has a reference to all of the apps for callback urls, this is a cyclic reference
 identityApi.WithEnvironment("BasketApiClient", basketApi.GetEndpoint("http"))
+    .WithEnvironment("OrderingApiClient", orderingApi.GetEndpoint("http"))
+    .WithEnvironment("OrderingApiClientHttps", orderingApi.GetEndpoint("https"))
     .WithEnvironment("WebAppClient", webApp.GetEndpoint("https"));
 
 builder.Build().Run();

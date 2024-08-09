@@ -54,6 +54,20 @@ public class BasketService(RedisBasketStore basketStore) : Basket.BasketBase
         return data is not null ? MapToCustomerBasketResponse(data) : new();
     }
 
+    public override async Task<DeleteBasketResponse> DeleteBasket(DeleteBasketRequest request, ServerCallContext context)
+    {
+        var userId = context.GetUserIdentity();
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            ThrowNotAuthenticated();
+        }
+
+        await basketStore.DeleteBasketAsync(userId);
+
+        return new();
+    }
+
     [DoesNotReturn]
     private static void ThrowNotAuthenticated()
         => throw new RpcException(new Status(StatusCode.Unauthenticated, "The caller is not authenticated."));

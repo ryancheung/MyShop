@@ -63,7 +63,11 @@ public static class HostingExtensions
         // HTTP and gRPC client registrations
         services.AddGrpcClient<Basket.BasketClient>(o => o.Address = new Uri("http://basket-api"))
             .AddAuthToken();
+
         services.AddHttpClient<CatalogService>(o => o.BaseAddress = new Uri("http://catalog-api"));
+        
+        builder.Services.AddHttpClient<OrderingService>(o => o.BaseAddress = new("https+http://ordering-api"))
+            .AddAuthToken();
 
         services.AddOpenIdConnectAccessTokenManagement();
         services.AddUserAccessTokenHttpClient("idpClient", configureClient: client =>

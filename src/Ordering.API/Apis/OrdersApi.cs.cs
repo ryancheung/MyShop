@@ -16,7 +16,7 @@ public static class OrderingApi
         var api = app.MapGroup("api/orders").HasApiVersion(1.0);	
         
         api.MapGet("/", GetOrdersByUserAsync);
-        app.MapPost("/", CreateOrderAsync)
+        api.MapPost("/", CreateOrderAsync)
             .WithParameterValidation(requireParameterAttribute: true);
 
         return api;

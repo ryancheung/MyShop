@@ -28,6 +28,11 @@ public class BasketService(GrpcBasketClient basketClient)
 		await basketClient.UpdateBasketAsync(updatePlayload);
 	}
 
+    public async Task DeleteBasketAsync()
+    {
+        await basketClient.DeleteBasketAsync(new DeleteBasketRequest());
+    }
+
 	static List<BasketQuantity> MapToBasket(CustomerBasketResponse response)
 	{
 		var result = new List<BasketQuantity>();

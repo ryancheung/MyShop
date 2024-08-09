@@ -8,11 +8,15 @@ namespace eShop.WebApp.Services;
 public class BasketState(
 	BasketService basketService,
 	CatalogService catalogService,
+	OrderingService orderingService,
 	AuthenticationStateProvider authenticationStateProvider
 )
 {
 	Task<IReadOnlyCollection<BasketItem>>? _cachedBasket;
 	readonly HashSet<BasketStateChangedSubscription> _changeSubscriptions = [];
+
+	public Task DeleteBasketAsync()
+        => basketService.DeleteBasketAsync();
 
 	public async Task<IReadOnlyCollection<BasketItem>> GetBasketItemsAsync()
 	      => (await GetUserAsync()).Identity?.IsAuthenticated == true
@@ -71,6 +75,39 @@ public class BasketState(
         }
     }
 
+    public async Task CheckoutAsync(BasketCheckoutInfo checkoutInfo)
+    {
+        if (checkoutInfo.RequestId == default)
+        {
+            checkoutInfo.RequestId = Guid.NewGuid();
+        }
+
+        var userName = await authenticationStateProvider.GetUserNameAsync() ?? throw new InvalidOperationException("User does not have a user name");
+
+        // Get details for the items in the basket
+        var orderItems = await FetchBasketItemsAsync();
+
+        // Call into Ordering.API to create the order using those details
+        var request = new CreateOrderRequest(
+            UserName: userName,
+            City: checkoutInfo.City!,
+            Street: checkoutInfo.Street!,
+            State: checkoutInfo.State!,
+            Country: checkoutInfo.Country!,
+            ZipCode: checkoutInfo.ZipCode!,
+            CardNumber: checkoutInfo.CardNumber!,
+            CardHolderName: checkoutInfo.CardHolderName!,
+            CardExpiration: checkoutInfo.CardExpiration!.Value, 
+            CardSecurityNumber: checkoutInfo.CardSecurityNumber!,
+            CardTypeId: checkoutInfo.CardTypeId,
+            Items: [.. orderItems]);
+        
+        await orderingService.CreateOrder(request, checkoutInfo.RequestId);
+
+        // Delete the basket
+        await DeleteBasketAsync();
+    }
+
 	Task NotifyChangeSubscribersAsync()
 		=> Task.WhenAll(_changeSubscriptions.Select(s => s.NotifyAsync()));
 
@@ -115,3 +152,17 @@ public class BasketState(
 		public void Dispose() => Owner._changeSubscriptions.Remove(this);
 	}
 }
+
+public record CreateOrderRequest(
+    string UserName,
+    string City,
+    string Street,
+    string State,
+    string Country,
+    string ZipCode,
+    string CardNumber,
+    string CardHolderName,
+    DateTime CardExpiration,
+    string CardSecurityNumber,
+    int CardTypeId,
+    List<BasketItem> Items);

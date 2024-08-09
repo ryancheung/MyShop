@@ -30,6 +30,7 @@ var orderingApi = builder.AddProject<Projects.Ordering_API>("ordering-api")
 var webApp = builder.AddProject<Projects.WebApp>("webapp")
     .WithReference(catalogApi)
     .WithReference(basketApi)
+    .WithReference(orderingApi)
     .WithEnvironment("IdentityUrl", identityEndpoint);
 
 // Wire up the callback urls (self referencing)

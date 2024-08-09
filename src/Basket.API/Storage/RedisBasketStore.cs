@@ -11,6 +11,11 @@ public class RedisBasketStore(IConnectionMultiplexer redis)
 
     private static RedisKey GetBasketKey(string userId) => BasketKeyPrefix.Append(userId);
 
+    public async Task<bool> DeleteBasketAsync(string id)
+    {
+        return await _database.KeyDeleteAsync(GetBasketKey(id));
+    }
+
     public async Task<CustomerBasket?> GetBasketAsync(string customerId)
     {
         var key = GetBasketKey(customerId);

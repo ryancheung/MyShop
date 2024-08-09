@@ -21,6 +21,7 @@
     <ProjectReference Include="..\Catalog.Data.Manager\Catalog.Data.Manager.csproj" />
     <ProjectReference Include="..\WebApp\WebApp.csproj" />
     <ProjectReference Include="..\Basket.API\Basket.API.csproj" />
+    <ProjectReference Include="..\Ordering.Data.Manager\Ordering.Data.Manager.csproj" />
   </ItemGroup>
 
 </Project>
